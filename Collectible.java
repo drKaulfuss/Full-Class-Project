@@ -1,12 +1,7 @@
 public class Collectible extends Item {
-    private String name;
 
     public Collectible(String name, int value) {
-        super(value);
-        this.name = name;
+        super(value, name);
     }
 
-    public String getName() {
-        return this.name;
-    }
 }

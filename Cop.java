@@ -1,4 +1,4 @@
-import java.util.;
+import java.util;
 public class Cop extends NPC {
 public static void main(String[] args) {
 private boolean isGoodCop;
