@@ -6,6 +6,8 @@ public class Building
     String location;
     String objective;
     NPC[] npc[];
+    Mission mission;
+    
     public Building(String name, Items[] items[], String location, String objective,NPC[] npc[])
     {
         this.name = name;
