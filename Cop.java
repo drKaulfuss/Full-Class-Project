@@ -39,18 +39,22 @@ public class Cop extends NPC {
   );
     this.isGoodCop = (Math.random >= 0.4);
   }
-  public void checkHonor(Player player); {
-    if (isGoodCop == False) {
-      this.speak((int)(Math.random() * 10) + 10);
-      // calls the fighting method
+  public void checkHonor(Player player) {
+    if (!isGoodCop) {
+        this.speak((int)(Math.random() * 10) + 10);
+        fight(player);
     } else if (player.getHonor() >= 12) {
-      this.speak((int)(Math.random() * 10));
-    } else if (player.getHonor() >= 8 && honor < 12) {
-      this.speak((int)(Math.random() * 10) + 20);
+        this.speak((int)(Math.random() * 10));
+    } else if (player.getHonor() >= 8 && player.getHonor() < 12) {
+        this.speak((int)(Math.random() * 10) + 20);
     } else {
-      this.speak((int)(Math.random() * 10) + 10);
-      // calls the fighting method
+        this.speak((int)(Math.random() * 10) + 10);
+        fight(player);
     }
-  }
+  }  
 
+  public void fight(Player player) {
+      // whatever combat logic is supposed to happen
+      // e.g. reduce player's HP, damage, etc.
+  }
 }
