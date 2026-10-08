@@ -10,7 +10,7 @@ public class Main {
         String tempGender = input.nextLine();
         Player playa = new Player(tempName, tempGender);
 
-        System.out.println("Are you interested in rescuing Darsh? (y/n)");
+        System.out.println("Do you find personal delight in seeking for the location of Darsh? (y/n)");
         boolean wantToPlay = false;
         if (input.nextLine().charAt(0) == 'y') {
             wantToPlay = true;
@@ -34,20 +34,33 @@ public class Main {
 
             // since there reasonably would be a list of missions in the townHall,
             // we get the specific mission that the user wants
-            // for this to work, townHall.getMissions would start each line with the index of each mission
+            // for this to work, townHall.getMissions() would start each line with the index of each mission
             // like "0. Rob a bank" and townHall.getMissionLocation(0) would return that Building.
             MissionLocation place = townHall.getMissionLocation(input.nextInt());
 
             // Do the mission
 
-            // Do the boss fight
+            // Do the mission's boss fight
 
             // Mark the mission as complete
+            townHall.setMissionCount(townHall.getCompleteMissions() + 1);
 
-            // if there are 5 complete missions, ask if the user wants to play
-            System.out.println("Do you want to continue, or do you want to rescue Darsh? (y/n)");
-            wantToPlay = input.nextLine().charAt(0) == 'y';
+            // if there are 5 complete missions, ask if the user wants to continue or rescue
+            if (townHall.getCompleteMissions() == 5) {
+                System.out.println("Do you want to continue, or do you want to rescue Darsh? (y/n)");
+                 if (input.nextLine().charAt(0) == 'y') {
+                    townHall.setMissionCount(0);
+                    wantToPlay = true;
+                 } else {
+                    wantToPlay = false;
+                 }
+            }
+
+            // Return to town hall for new mission
+
         }
+
+
     }
 
 }

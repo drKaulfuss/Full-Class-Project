@@ -44,6 +44,28 @@ public class Player extends Character {
         this.inventory[index] = null;
     }
 
+    public void addToInv(Item item) {
+        for (int i = 0; i < inventory.length; i++) {
+            Item currentItem = inventory[i];
+            if (currentItem == null) {
+                inventory[i] = item;
+                System.out.println("You got an item: " + item.getName());
+                return;
+            }
+        }
+        System.out.println("Your inventory is full! Throw something out first!");
+    }
+
+    public boolean inventoryHasRoom() {
+        for (int i = 0; i < inventory.length; i++) {
+            Item currentItem = inventory[i];
+            if (currentItem == null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Item[] getInv () {
         return this.inventory;
     }

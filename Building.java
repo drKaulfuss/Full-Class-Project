@@ -2,54 +2,55 @@ import java.util.Arrays;
 public class Building
 {   
     private String name;
-    private Item[] item[];
+    private Item[] items;
     private String location;
     private String objective;
-    private NPC[] npc[];
-    private Mission mission;
+    private NPC[] npc;
+    private Missions mission;
     
-    public Building(String name, Items[] items[], String location, String objective,NPC[] npc[])
+    public Building(String name, Item[] items, String location, String objective, NPC[] npc)
     {
         this.name = name;
         this.location =location;
         this.objective = objective;
-        this.item = new Items[items];
+        this.items = items;
+        this.npc = npc;
     }
 
     // Changed this. It shouldn't be static and should have a return type.
-    public String Greeting(){
+    public String greeting(){
         return "Welcome to " + this.name + ". Located in " + this.location;
     }
-    public void GetInfo(){
+    public void getInfo(){
         System.out.println("Your objectives for " + name + " is " + objective);
 
     }
-    public String GetName(){
+    public String getName(){
          return this.name;
     }
-    public String GetLocation(){
+    public String getLocation(){
          return this.location;
     }
-    public String GetObjective(){
+    public String getObjective(){
          return this.objective;
     }
-    public Items[] GetItems(){
-        return Arrays.copyof(items, items.length);
+    public Item[] getItems(){
+        return Arrays.copyOf(this.items, this.items.length);
         
         
     }
-    public NPC[] GetNpc(){
-        return Arrays.copyof(npc, npc.length);
+    public NPC[] getNpc(){
+        return Arrays.copyOf(this.npc, this.npc.length);
         
     } 
-    public void  SetName(String name){
-         this.name = name;
+    public void setName(String name){
+        this.name = name;
     }
-    public void SetLocation(String location){
-          this.location= location;
+    public void setLocation(String location){
+        this.location= location;
     }
-    public void SetObjective(String objective){
-          this.objective = objective ;
+    public void setObjective(String objective){
+        this.objective = objective;
     }
     
     

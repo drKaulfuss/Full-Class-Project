@@ -1,3 +1,5 @@
+
+
 public class NPC extends Character {
     private String[] dialogue;
 
@@ -16,6 +18,10 @@ public class NPC extends Character {
 
     public String[] getDialogue () {
         return dialogue;
+    }
+
+    public void setDialogue(String[] newDia) {
+        this.dialogue = newDia;
     }
 
     public String toString () {
