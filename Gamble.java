@@ -20,9 +20,9 @@ public class Gamble extends Building {
  
     // Constructor
     public Gamble(Player player) {
-        super("Casino", new Items[0], "Downtown",
+        super("Casino", new Item[1], "Downtown",
               "Win chips and cash out before your honor drops too low.",
-              new NPC[0][0]);
+              new NPC[1]);
         this.player = player;
         this.chips = 0;
         this.scanner = new Scanner(System.in);
