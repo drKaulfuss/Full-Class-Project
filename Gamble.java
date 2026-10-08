@@ -1,31 +1,60 @@
 import java.util.Random;
 import java.util.Scanner;
-
-public class Gamble {
-
+ 
+public class Gamble extends Building {
+ 
     // Exchange rates
     private static final int COINS_PER_CHIP = 10;   // deposit: 10 coins = 1 chip
     private static final int COINS_PER_CASHOUT = 9; // cashout: 1 chip = 9 coins (casino tax)
-
+ 
     // Fields
     private int chips;
     private Player player; // need to find  the class name for what the player is
     private Scanner scanner;
     private Random random;
-
-
+ 
+    // Casino NPC
+    private String dealerName = "Jeff E.";
+    private String dealerLine = "Welcome in, friend. Try your luck.";
+ 
+ 
     // Constructor
     public Gamble(Player player) {
+        super("Casino", new Items[0], "Downtown",
+              "Win chips and cash out before your honor drops too low.",
+              new NPC[0]);
         this.player = player;
         this.chips = 0;
         this.scanner = new Scanner(System.in);
         this.random = new Random();
     }
-
+ 
     // ------------------------------
     // Menu
     // ------------------------------
-
+ 
+    // Greets the player, shows the objective, then opens the gamble menu.
+    public void enter() {
+        System.out.println("What would you like to do? ('NPC', 'exit')");
+        String enterAns = this.scanner.nextLine();
+        if(enterAns == "NPC"){
+            talkToNpc();
+        }
+        else if (enterAns == "exit"){
+            break;
+        }
+        else {
+            System.out.println("Invalid answer");
+        }
+        
+    }
+ 
+    // Talks to the casino NPC.
+    public void talkToNpc() {
+        System.out.println(dealerName + ": " + dealerLine);
+        gambleMenu();
+    }
+ 
     // Main entry point. Shows options and loops until the player exits.
 public void gambleMenu() {
     System.out.println("Welcome to the gamble menu!");
@@ -40,8 +69,9 @@ public void gambleMenu() {
     System.out.println("9. Exit");
     System.out.println("10. Deposit Coins");
     System.out.println("11. Payout Coins");
-
-
+    System.out.println("12. Talk to the Dealer");
+ 
+ 
     int choice = this.scanner.nextInt();
     
     if (choice == 1) {
@@ -78,20 +108,24 @@ public void gambleMenu() {
        payout();
        gambleMenu();
     }
+    else if (choice == 12) {
+        talkToNpc();
+        gambleMenu();
+    }
         
         
     else {
         System.out.println("Invalid choice. Please try again.");
     }
 }
-
+ 
     // ------------------------------
     // Chip methods
     // ------------------------------
-
+ 
     // Turns coins into chips (10 coins = 1 chip) and lowers honor.
     public void depositCoins() {
-
+ 
         System.out.println("How many coins would you like to deposit? (Rate: 10 coins per chip): ");
         int coinDeptAmt = this.scanner.nextInt();
         
@@ -104,11 +138,11 @@ public void gambleMenu() {
             System.out.print("Error occured or not enough coins");
         }
     }
-
+ 
     // Turns chips into coins (1 chip = 9 coins) and adds them to the wallet.
     public void payout() {
         System.out.println("You currently have " + getChips() + " chips.");
-
+ 
         System.out.println("How many chips would you like to cash out?");
         int cashOutNum = this.scanner.nextInt();
         if (hasEnoughChips(cashOutNum)){
@@ -118,30 +152,30 @@ public void gambleMenu() {
         else{
             System.out.print("Error occured or not enough coins");
         }
-
-
+ 
+ 
     }
-
+ 
     public int getChips() {
         return chips;
     }
-
+ 
     public void addChips(int amount) {
         chips += amount;
     }
-
+ 
     public void removeChips(int amount) {
         chips -= amount;
     }
-
+ 
     public boolean hasEnoughChips(int bet) {
         return chips >= bet;
     }
-
+ 
     // ------------------------------
     // Game methods
     // ------------------------------
-
+ 
     // Rey and Henry
 // Emilia
     public void threeCups() {
@@ -163,7 +197,7 @@ public void gambleMenu() {
             System.out.println("You have cashed out with " + chips + " chips");
         }
     }
-
+ 
 public void slots() {
         printGameInfo("Slots", "You will place a bet and spin the machine. If one 7 lands money back, if two 7s land you will win 2x your bet. if three 7s land you will win 3x your bet.");
         int bet = askForBet();
@@ -269,8 +303,8 @@ public void slots() {
         }
     }
  
-
-
+ 
+ 
 public void lottery() {
         printGameInfo("Scrath Offs", "Choose your ticket amount. One 7 is 1x, Two 7s are 2x, and three 7s are 3x");
         int bet = askForBet();
@@ -313,7 +347,7 @@ public void lottery() {
             loseBet(bet);
         }
         }
-
+ 
     // Rafal (red, black, green)
     public void roulette() {
         System.out.println("Bet on red, black, or green 1 = red, 2 = black, 3 = green. ");
@@ -340,7 +374,7 @@ public void lottery() {
         } else if (table % 2 != 0) {
             tableBlack = true;
         }
-
+ 
         if (tableBlack == true && userBlack == true) {
             System.out.println("Congratulations you guessed correctly");
         } else if (tableRed == true && userRed == true) {
@@ -351,8 +385,8 @@ public void lottery() {
             System.out.println("You did not guess correctly");
         }
         }
-
-
+ 
+ 
     // Emilia (lowers honor while playing)
 // Emilia (lowers honor while playing)
     public void russianRoulette() {
@@ -390,9 +424,9 @@ public void lottery() {
                 System.out.println("You have cashed out with " + chips + " chips");
                
             }}
-
+ 
         }
-
+ 
  // Reg
     public void highLow() {
         printGameInfo("High Low", "You will play a card, then guess if the following card will be Higher or Lower than the current. If you win, you win 2x your bet. You win nothing if you lose.");
@@ -402,7 +436,7 @@ public void lottery() {
         String[] ranks = {"Ace","2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"};
         int[] values = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14}; // Ace is highest (14)
         String[] suits = {"♠ (Spades)", "♥ (Hearts)", "♦ (Diamonds)", "♣ (Clubs)"};
-
+ 
         int firstRankIndex = randomInt(0, ranks.length - 1);
         int firstSuitIndex = randomInt(0, suits.length - 1);
         int firstValue = values[firstRankIndex];
@@ -410,16 +444,16 @@ public void lottery() {
         System.out.println("\nYour current card is: " + ranks[firstRankIndex] + " of " + suits[firstSuitIndex]);
        
         this.scanner.nextLine();
-
+ 
         System.out.print("Will the next card be Higher or Lower? (Type 'high' or 'low'): ");
         String guess = this.scanner.nextLine().trim().toLowerCase();
-
+ 
         int secondRankIndex = randomInt(0, ranks.length - 1);
         int secondSuitIndex = randomInt(0, suits.length - 1);
         int secondValue = values[secondRankIndex];
        
         System.out.println("The next card is: " + ranks[secondRankIndex] + " of " + suits[secondSuitIndex]);
-
+ 
         boolean won = false;
         if (secondValue > firstValue && guess.equals("high")) {
             won = true;
@@ -428,7 +462,7 @@ public void lottery() {
         } else if (secondValue == firstValue) {
             System.out.println("It's a tie! You lost.");
         }
-
+ 
         if (won) {
             System.out.println("Congratulations! You guessed correctly.");
             winBet(bet, 2); // 2x win
@@ -447,7 +481,7 @@ public void coinFlip() {
         String coinFlip = this.scanner.nextLine();
         int cf; // 0 for Heads, 1 for Tails
         String lowerCoinFlip = coinFlip.toLowerCase();
-
+ 
         if (lowerCoinFlip.startsWith("h")) {
             cf = 0; // Heads
         }      
@@ -474,16 +508,16 @@ public void coinFlip() {
         }
         System.out.println("Thanks for playing!");
     }
-
+ 
     // ------------------------------
     //  helper methods
     // ------------------------------
-
+ 
     // Explains a game before it starts.
     private void printGameInfo(String name, String rules) {
         System.out.println("Welcome to " + name + " the rules are as follows: " + rules);
     }
-
+ 
     // Prompts for a bet and returns a valid amount.
     private int askForBet() {
         System.out.println("How much would you like to bet? ");
@@ -495,7 +529,7 @@ public void coinFlip() {
             return 0;
         }
     }
-
+ 
     // Returns true if the bet is above 0 and within the chip count.
     private boolean validateBet(int bet) {
         if (hasEnoughChips(bet)){
@@ -504,7 +538,7 @@ public void coinFlip() {
             return false;
         }
     }
-
+ 
     // Returns true if the player wants to play again.
     private boolean askPlayAgain() {
         System.out.println("Do you want to play again? (Y/N): ");
@@ -520,22 +554,22 @@ public void coinFlip() {
             return false;
         }
     }
-
+ 
     // Returns a random int from min to max, inclusive.
     private int randomInt(int min, int max) {
         return random.nextInt(max - min + 1) + min;
     }
-
+ 
     // Adds winnings to chips (bet * multiplier).
     private void winBet(int bet, int multiplier) {
         chips += (bet * multiplier);
     }
-
+ 
     // Removes the bet from chips.
     private void loseBet(int bet) {
         chips -= bet;
     }
-
+ 
     // Reads a valid text choice from the given options.
     private String readChoice(String... options) {
         while (true) {
@@ -550,7 +584,7 @@ public void coinFlip() {
             System.out.println("Please type one of these: " + String.join(", ", options));
         }
     }
-
+ 
     // Lowers the player's honor.
     private void lowerHonor(int amount) {
         // Player.lowerHonor(100); // Not sure yet since I need class name for player
