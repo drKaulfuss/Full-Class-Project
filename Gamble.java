@@ -22,7 +22,7 @@ public class Gamble extends Building {
     public Gamble(Player player) {
         super("Casino", new Items[0], "Downtown",
               "Win chips and cash out before your honor drops too low.",
-              new NPC[0]);
+              new NPC[0][0]);
         this.player = player;
         this.chips = 0;
         this.scanner = new Scanner(System.in);
@@ -37,11 +37,11 @@ public class Gamble extends Building {
     public void enter() {
         System.out.println("What would you like to do? ('NPC', 'exit')");
         String enterAns = this.scanner.nextLine();
-        if(enterAns == "NPC"){
+        if(enterAns.equals("NPC")){
             talkToNpc();
         }
-        else if (enterAns == "exit"){
-            break;
+        else if (enterAns.equals("exit")){
+            return;
         }
         else {
             System.out.println("Invalid answer");
@@ -125,37 +125,68 @@ public void gambleMenu() {
  
     // Turns coins into chips (10 coins = 1 chip) and lowers honor.
     public void depositCoins() {
- 
+        System.out.println("You currently have " + getCoins() + " coins.");
         System.out.println("How many coins would you like to deposit? (Rate: 10 coins per chip): ");
         int coinDeptAmt = this.scanner.nextInt();
-        
-        if (coinDeptAmt < Player.coins){
-        this.chips = coinDeptAmt / COINS_PER_CHIP;
-        Player.coins -= coinDeptAmt; // not sure what the coins are for player (figure out later)
-        lowerHonor(10);
-        }
-        else {
-            System.out.print("Error occured or not enough coins");
+        int newChips = coinDeptAmt / COINS_PER_CHIP;
+        int coinsSpent = newChips * COINS_PER_CHIP; // leftover coins stay with the player
+
+        if (newChips > 0 && coinsSpent <= getCoins()) {
+            setCoins(getCoins() - coinsSpent);
+            this.chips += newChips;
+            lowerHonor(10);
+            System.out.println("You got " + newChips + " chips. You now have " + this.chips + " chips.");
+        } else {
+            System.out.println("Error occured or not enough coins");
         }
     }
- 
+
     // Turns chips into coins (1 chip = 9 coins) and adds them to the wallet.
     public void payout() {
         System.out.println("You currently have " + getChips() + " chips.");
- 
+
         System.out.println("How many chips would you like to cash out?");
         int cashOutNum = this.scanner.nextInt();
-        if (hasEnoughChips(cashOutNum)){
-        Player.coins = cashOutNum * COINS_PER_CASHOUT; // adjust to use setter for coins;
-        this.chips -= cashOutNum;
+        if (cashOutNum > 0 && hasEnoughChips(cashOutNum)) {
+            setCoins(getCoins() + cashOutNum * COINS_PER_CASHOUT);
+            this.chips -= cashOutNum;
+            System.out.println("You now have " + getCoins() + " coins.");
+        } else {
+            System.out.println("Error occured or not enough chips");
         }
-        else{
-            System.out.print("Error occured or not enough coins");
-        }
- 
- 
     }
- 
+
+    // Adds up the money from every Coin in the player's inventory.
+    private int getCoins() {
+        int total = 0;
+        for (Item item : player.getInv()) {
+            if (item instanceof Coin) {
+                total += ((Coin) item).getMoney();
+            }
+        }
+        return total;
+    }
+
+    // Replaces all coins in the inventory with one Coin worth newAmount.
+    private void setCoins(int newAmount) {
+        Item[] inv = player.getInv();
+        for (int i = 0; i < inv.length; i++) {
+            if (inv[i] instanceof Coin) {
+                player.removeFromInv(i);
+            }
+        }
+        if (newAmount <= 0) {
+            return;
+        }
+        for (int i = 0; i < inv.length; i++) {
+            if (inv[i] == null) {
+                inv[i] = new Coin(newAmount);
+                return;
+            }
+        }
+        System.out.println("Your inventory is full. Could not store your coins.");
+    }
+
     public int getChips() {
         return chips;
     }
@@ -201,7 +232,6 @@ public void gambleMenu() {
 public void slots() {
         printGameInfo("Slots", "You will place a bet and spin the machine. If one 7 lands money back, if two 7s land you will win 2x your bet. if three 7s land you will win 3x your bet.");
         int bet = askForBet();
-        int[] slotResults = new int[3];
         System.out.println("Spinning the slots...");
         try {
             Thread.sleep(500); // Simulate spinning delay
@@ -409,7 +439,7 @@ public void lottery() {
             int hospitalChances = random.nextInt(1,2);
             if (hospitalChances == 1) {
                 System.out.println("You have been shot and are now in the hospital");
-                int Health = 10;
+                player.setHp(10);
             } else {
                 System.out.println("You have been shot and have died");
                 System.exit(0);
@@ -544,9 +574,9 @@ public void coinFlip() {
         System.out.println("Do you want to play again? (Y/N): ");
         String playAgainAns = this.scanner.nextLine();
         playAgainAns = playAgainAns.toUpperCase();
-        if (playAgainAns == "Y"){
+        if (playAgainAns.equals("Y")){
             return true;
-        } else if (playAgainAns =="N"){
+        } else if (playAgainAns.equals("N")){
             return false;
         }
         else {
@@ -587,6 +617,11 @@ public void coinFlip() {
  
     // Lowers the player's honor.
     private void lowerHonor(int amount) {
-        // Player.lowerHonor(100); // Not sure yet since I need class name for player
+    int newHonor = player.getHonor() - amount;
+    if (newHonor < 0) {
+        newHonor = 0;
     }
+    player.setHonor(newHonor);
+    System.out.println("Your honor dropped to " + newHonor + ".");
+}
 }

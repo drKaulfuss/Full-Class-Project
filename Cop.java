@@ -1,5 +1,5 @@
 import java.util.;
-public class Cop extends NPC {
+public class Cop extends NPC { 
 
   private boolean isGoodCop;
   public Cop (String name, String gender, int str, int spd, int hp) {

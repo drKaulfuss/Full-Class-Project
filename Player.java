@@ -3,6 +3,7 @@ import java.util.*;
 public class Player extends Character {
     private Item[] inventory = new Item[20];
     private int honor = 0;
+    private Coin money = new Coin(0);
 
     public Player (String n, String g) {
         super(n, g, 5, 5, 100);
@@ -22,25 +23,12 @@ public class Player extends Character {
     }
 
     public int getMoney () {
-        int totalMoney = 0;
-        for (int i = 0; i < this.inventory.length; i++) {
-            if (this.inventory[i] instanceof Coin) {
-                totalMoney += this.inventory[i].getValue();
-            }
-        }
-        return totalMoney;
+        return money.getMoney();
     }
 
-    /*public void setMoney (int newVal) {
-        for (int i = 0; i < this.inventory.length; i++) {
-            if (this.inventory[i] instanceof Coin) {
-                this.inventory.remove(i);
-                i--;
-            }
-        }
-
-        this.inventory.add(new Coin(newVal));
-    }*/
+    public void setMoney(int n) {
+        money.setMoney(n);
+    }
 
     public int getInvValue () {
         int totalValue = 0;
