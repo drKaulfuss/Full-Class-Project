@@ -1,7 +1,15 @@
 public class Shopkeeper extends NPC {
 
+    public String[] shopkeeperDialogue = new String[]{
+        "Hello! Welcome to my shop! Would you like anything?",
+        "Here's what I've got!",
+        "Thank you for your purchase! Want something else?",
+        "Want anything else?",
+    };
+
     public Shopkeeper(String n, String g, int st, int sp, int hp, String[] dia) {
         super(n, g, st, sp, hp, dia);
+        this.setDialogue(shopkeeperDialogue);
     }
     
     public void getItems() {
@@ -22,6 +30,8 @@ public class Shopkeeper extends NPC {
 
     private Item[] itemsForSale;
     private double priceMult;
+
+    
 
 } 
 
